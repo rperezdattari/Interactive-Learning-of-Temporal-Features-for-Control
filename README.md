@@ -1,4 +1,4 @@
-# Interactive-Learning-of-Temporal-Feature-for-Control
-Code for paper "Interactive Learning of Temporal Feature for Control".
+# Interactive-Learning-of-Temporal-Features-for-Control
+Code for paper "Interactive Learning of Temporal Features for Control".
 
 Soon...
