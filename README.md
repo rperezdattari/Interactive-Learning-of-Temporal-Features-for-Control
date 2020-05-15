@@ -1,14 +1,21 @@
 # Interactive Learning of Temporal Features for Control
+Code of the paper "Interactive Learning of Temporal Features for Control" published in the IEEE Robotics & Automation Magazine (Special Issue on Deep Learning and Machine Learning in Robotics).
 
+This code is based on the following publication:
+1. [Interactive Learning of Temporal Features for Control](https://ieeexplore.ieee.org/document/9076630), preprint availabe [here](http://www.jenskober.de/publications/PerezDattari2020RAM.pdf).
+
+**Authors:** Rodrigo Pérez-Dattari, Carlos Celemin, Giovanni Franzese, Javier Ruiz-del-Solar, Jens Kober.
+
+[Link to paper video](https://youtu.be/4kWGfNdm21A)
 ## Installation
 
 To use the code, it is necessary to first install the gym toolkit (release v0.9.6): https://github.com/openai/gym
 
 Then, the files in the `gym` folder of this repository should be replaced/added in the installed gym folder on your PC. There are modifications of two gym environments:
 
-1. **Mountain Car:**
+1. **Mountain Car:** TODO
 
-1. **Inverted Pendulum:**
+1. **Inverted Pendulum:** TODO
 
 2. **Car Racing:** the same CarRacing environment of Gym with some bug fixes and modifications in the main loop for database generation.
 
@@ -23,7 +30,7 @@ Then, the files in the `gym` folder of this repository should be replaced/added 
 
 ## Usage
 
-1. To run the main program type in the terminal (inside the folder `D-COACH`):
+1. To run the main program type in the terminal (inside the folder `src`):
 
 ```bash 
 python main.py --config-file <environment>
