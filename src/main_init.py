@@ -14,6 +14,10 @@ config = ConfigProto()
 config.gpu_options.allow_growth = True
 session = InteractiveSession(config=config)
 
+"""
+Script that initializes the variables used in the file main.py
+"""
+
 
 # Read program args
 parser = argparse.ArgumentParser()
@@ -63,7 +67,11 @@ transition_model = TransitionModel(training_sequence_length=config_transition_mo
                                    show_observation=config_transition_model.getboolean('show_observation'),
                                    resize_observation=config_transition_model.getboolean('resize_observation'),
                                    occlude_observation=config_transition_model.getboolean('occlude_observation'),
-                                   dim_a=config_agent.getint('dim_a'))
+                                   dim_a=config_agent.getint('dim_a'),
+                                   buffer_sampling_rate=config_transition_model.getint('buffer_sampling_rate'),
+                                   buffer_sampling_size=config_transition_model.getint('buffer_sampling_size'),
+                                   number_training_iterations=config_transition_model.getint('number_training_iterations'),
+                                   train_end_episode=config_transition_model.getboolean('train_end_episode'))
 
 # Create Agent
 agent = agent_selector(agent_type, config_agent)

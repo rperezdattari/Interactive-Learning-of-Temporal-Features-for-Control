@@ -4,6 +4,10 @@ from main_init import neural_network, transition_model, transition_model_type, a
     max_num_of_episodes, env, render, max_time_steps_episode, human_feedback, save_results, eval_save_path, \
     render_delay, save_policy, save_transition_model
 
+"""
+Main loop of the algorithm described in the paper 'Interactive Learning of Temporal Features for Control' 
+"""
+
 # Initialize variables
 total_feedback, total_time_steps, trajectories_database, total_reward = [], [], [], []
 t_total, h_counter, last_t_counter, omg_c, eval_counter, total_r = 1, 0, 0, 0, 0, 0
@@ -15,7 +19,7 @@ init_time = time.time()
 print('\nExperiment number:', exp_num)
 print('Environment:', env)
 print('Learning algorithm: ', agent_type)
-print('Transition Model:l', transition_model_type, '\n')
+print('Transition Model:', transition_model_type, '\n')
 
 time.sleep(2)
 
@@ -30,7 +34,6 @@ for i_episode in range(max_num_of_episodes):
     print('Starting episode number', i_episode)
 
     if not evaluation:
-        agent.new_episode()
         transition_model.new_episode()
 
     observation = env.reset()  # reset environment at the beginning of the episode
@@ -43,12 +46,22 @@ for i_episode in range(max_num_of_episodes):
             env.render()  # Make the environment visible
             time.sleep(render_delay)  # Add delay to rendering if necessary
 
+        # Get feedback signal
+        h = human_feedback.get_h()
+        evaluation = human_feedback.evaluation
+
+        # Feed h to agent
+        agent.feed_h(h)
+
         # Map action from observation
         state_representation = transition_model.get_state_representation(neural_network, observation)
-        action = agent.action(neural_network, state_representation)  # TODO: probably change agent to policy
+        action = agent.action(neural_network, state_representation)
 
         # Act
-        observation, reward, done, info = env.step(action)
+        observation, reward, environment_done, info = env.step(action)
+
+        # Compute done
+        done = human_feedback.ask_for_done() or environment_done
 
         # Compute new hidden state of LSTM
         transition_model.compute_lstm_hidden_state(neural_network, action)
@@ -60,21 +73,20 @@ for i_episode in range(max_num_of_episodes):
 
             past_observation, past_action = transition_model.processed_observation, action
 
-            if t % 100 == 0:  # TODO: add this to config file
+            if t % 100 == 0 or done:
                 trajectories_database.append(episode_trajectory)  # append episode trajectory to database
                 episode_trajectory = []
-
-        # Get feedback signal
-        h = human_feedback.get_h()
-        evaluation = human_feedback.evaluation
 
         if np.any(h):
             h_counter += 1
 
-        # Update weights policy/transition model
+        # Update weights transition model/policy
         if not evaluation:
-            agent.train(neural_network, transition_model, state_representation, action, h, t_total)
-            transition_model.train(neural_network, t_total, trajectories_database)
+            if done:
+                t_total = done  # tell the agents that the episode finished
+
+            transition_model.train(neural_network, t_total, done, trajectories_database)
+            agent.train(neural_network, transition_model, action, t_total, done)
 
             t_total += 1
 
@@ -82,7 +94,7 @@ for i_episode in range(max_num_of_episodes):
         r += reward
 
         # End of episode
-        if done or human_feedback.ask_for_done():
+        if done:
             if evaluation:
                 total_r += r
 

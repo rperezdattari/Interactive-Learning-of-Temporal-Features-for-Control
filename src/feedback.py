@@ -1,6 +1,10 @@
 from pyglet.window import key
 from tools.functions import str_2_array
 
+"""
+Class that obtains the human feedback from the computer's keyboard.
+"""
+
 
 class Feedback:
     def __init__(self, env, key_type, h_up, h_down, h_right, h_left, h_null):

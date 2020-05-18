@@ -4,6 +4,10 @@ import matplotlib
 matplotlib.use('TKAgg')  # Necessary for fast plots, otherwise they may crash
 import configparser
 
+"""
+Useful functions that are used throughout the code.
+"""
+
 
 def load_config_data(config_dir):
     config = configparser.ConfigParser()

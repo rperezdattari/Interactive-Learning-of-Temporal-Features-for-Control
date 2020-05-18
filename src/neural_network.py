@@ -2,6 +2,10 @@ import tensorflow as tf
 import tensorflow.contrib.layers as lays
 import os
 
+"""
+Neural network structure.
+"""
+
 
 class NeuralNetwork:
     def __init__(self, policy_learning_rate, transition_model_learning_rate, lstm_hidden_state_size,

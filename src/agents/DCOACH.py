@@ -2,11 +2,17 @@ import numpy as np
 from tools.functions import str_2_array
 from buffer import Buffer
 
+"""
+D-COACH implementation
+"""
+
 
 class DCOACH:
     def __init__(self, dim_a, action_upper_limits, action_lower_limits, e, buffer_min_size, buffer_max_size,
-                 buffer_sampling_rate, buffer_sampling_size):
+                 buffer_sampling_rate, buffer_sampling_size, train_end_episode):
         # Initialize variables
+        self.h = None
+        self.state_representation = None
         self.policy_action_label = None
         self.e = np.array(str_2_array(e, type_n='float'))
         self.dim_a = dim_a
@@ -15,13 +21,14 @@ class DCOACH:
         self.count = 0
         self.buffer_sampling_rate = buffer_sampling_rate
         self.buffer_sampling_size = buffer_sampling_size
+        self.train_end_episode = train_end_episode
 
         # Initialize DCOACH buffer
         self.buffer = Buffer(min_size=buffer_min_size, max_size=buffer_max_size)
 
-    def _generate_policy_label(self, h, action):
-        if np.any(h):
-            error = np.array(h * self.e).reshape(1, self.dim_a)
+    def _generate_policy_label(self, action):
+        if np.any(self.h):
+            error = np.array(self.h * self.e).reshape(1, self.dim_a)
             self.policy_action_label = []
 
             for i in range(self.dim_a):
@@ -47,11 +54,15 @@ class DCOACH:
                                 feed_dict={'policy/state_representation:0': state_representation_batch,
                                            'policy/policy_label:0': action_label_batch})
 
+    def feed_h(self, h):
+        self.h = h
+
     def action(self, neural_network, state_representation):
         self.count += 1
+        self.state_representation = state_representation
 
         action = neural_network.sess.run(neural_network.policy_output,
-                                         feed_dict={'policy/state_representation:0': state_representation})
+                                         feed_dict={'policy/state_representation:0': self.state_representation})
         out_action = []
 
         for i in range(self.dim_a):
@@ -60,15 +71,15 @@ class DCOACH:
 
         return np.array(out_action)
 
-    def train(self, neural_network, transition_model, state_representation, action, h, t):
-        self._generate_policy_label(h, action)
+    def train(self, neural_network, transition_model, action, t, done):
+        self._generate_policy_label(action)
 
         # Policy training
-        if np.any(h):  # if any element is not 0
-            self._single_update(neural_network, state_representation)
-            print("feedback", h)
+        if np.any(self.h):  # if any element is not 0
+            self._single_update(neural_network, self.state_representation)
+            print("feedback:", self.h)
 
-            # Add state action-label pair to memory buffer
+            # Add last step to memory buffer
             if transition_model.last_step(self.policy_action_label) is not None:
                 self.buffer.add(transition_model.last_step(self.policy_action_label))
 
@@ -78,9 +89,6 @@ class DCOACH:
                 self._batch_update(neural_network, transition_model, batch)
 
         # Train policy every k time steps from buffer
-        if self.buffer.initialized() and t % self.buffer_sampling_rate == 0:
+        if self.buffer.initialized() and t % self.buffer_sampling_rate == 0 or (self.train_end_episode and done):
             batch = self.buffer.sample(batch_size=self.buffer_sampling_size)
             self._batch_update(neural_network, transition_model, batch)
-
-    def new_episode(self):
-        pass
