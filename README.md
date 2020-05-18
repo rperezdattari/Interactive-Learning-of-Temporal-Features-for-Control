@@ -7,6 +7,8 @@ This code is based on the following publication:
 **Authors:** Rodrigo Pérez-Dattari, Carlos Celemin, Giovanni Franzese, Javier Ruiz-del-Solar, Jens Kober.
 
 [Link to paper video](https://youtu.be/4kWGfNdm21A)
+
+This repository includes the code necessary to run the experiments done in simulated environments using human teachers.
 ## Installation
 
 To use the code, it is necessary to first install the gym toolkit (release v0.9.6): https://github.com/openai/gym
