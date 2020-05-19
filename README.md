@@ -33,7 +33,7 @@ Then, the files in the `gym` folder of this repository should be replaced/added 
 1. To run the main program type in the terminal (inside the folder `src`):
 
 ```bash 
-python main.py --config-file <environment>
+python main.py --config-file <config_file_name>
 ```
 
 To be able to give feedback to the agent, the environment rendering window must be selected/clicked.
