@@ -13,7 +13,7 @@ This repository includes the code necessary to run the experiments done in simul
 
 To use the code, it is necessary to first install the gym toolkit (release v0.9.6): https://github.com/openai/gym
 
-Then, the files in the `gym` folder of this repository should be replaced/added in the installed gym folder on your PC. There are modifications of two gym environments:
+Then, the files in the `gym` folder of this repository should be replaced/added in the installed gym folder in your PC. Two environments were added:
 
 1. **Continuous Mountain Car:** the environment outputs an image as an observation.
 
