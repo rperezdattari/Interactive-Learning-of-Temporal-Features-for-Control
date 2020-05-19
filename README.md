@@ -15,11 +15,9 @@ To use the code, it is necessary to first install the gym toolkit (release v0.9.
 
 Then, the files in the `gym` folder of this repository should be replaced/added in the installed gym folder on your PC. There are modifications of two gym environments:
 
-1. **Mountain Car:** TODO
+1. **Continuous Mountain Car:** the environment outputs an image as an observation.
 
-1. **Inverted Pendulum:** TODO
-
-2. **Car Racing:** the same CarRacing environment of Gym with some bug fixes and modifications in the main loop for database generation.
+1. **Inverted Pendulum:** the pendulum is bigger and the environments outputs an image as an observation.
 
 ### Requirements
 * setuptools==38.5.1
