@@ -1,5 +1,5 @@
 setuptools==38.5.1
-numpy==1.13.3
+numpy==1.22.0
 opencv_python==3.4.0.12
 matplotlib==2.2.2
 tensorflow==1.4.0
