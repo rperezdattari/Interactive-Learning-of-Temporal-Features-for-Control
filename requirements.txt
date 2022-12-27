@@ -1,4 +1,4 @@
-setuptools==38.5.1
+setuptools==65.5.1
 numpy==1.13.3
 opencv_python==3.4.0.12
 matplotlib==2.2.2
